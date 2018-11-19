@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyx.model.dao.BankMapper" >
+  <resultMap id="BaseResultMap" type="com.yyx.entity.Bank" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="bankno" property="bankno" jdbcType="VARCHAR" />
+    <result column="salary" property="salary" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, bankno, salary
+  </sql>
+  
+  <!-- 出账 -->
+  <update id="out" parameterType="com.yyx.entity.Bank" >
+    update bank
+    set salary=salary-#{salary}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 入账 -->
+  <update id="in" parameterType="com.yyx.entity.Bank" >
+    update bank
+    set salaryss=salaryssss+#{salary}
+    where idsssss = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bank
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bank
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyx.entity.Bank" >
+    insert into bank (id, bankno, salary
+      )
+    values (#{id,jdbcType=INTEGER}, #{bankno,jdbcType=VARCHAR}, #{salary,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyx.entity.Bank" >
+    insert into bank
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="bankno != null" >
+        bankno,
+      </if>
+      <if test="salary != null" >
+        salary,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="bankno != null" >
+        #{bankno,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null" >
+        #{salary,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyx.entity.Bank" >
+    update bank
+    <set >
+      <if test="bankno != null" >
+        bankno = #{bankno,jdbcType=VARCHAR},
+      </if>
+      <if test="salary != null" >
+        salary = #{salary,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyx.entity.Bank" >
+    update bank
+    set bankno = #{bankno,jdbcType=VARCHAR},
+      salary = #{salary,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

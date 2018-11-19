@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yyx.model.dao.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.yyx.entity.User" >
+    <id column="uid" property="uid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="addr" property="addr" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uid, username, password, name, phone, email, addr, state, code
+  </sql>
+  
+  <sql id="select_sql" >
+    select
+    <include refid="Base_Column_List"/>
+    from user where 1=1
+    <if test="user.username != null and user.username!=''" >
+        <!-- and username like '%'||#{username}||'%' 这是Oracle数据库的 -->
+        <!-- mysql数据库中的模糊查询语句 -->
+        and username like concat(concat('%',#{user.username}),'%')
+      </if>
+      <if test="user.name != null and user.name!=''" >
+        <!-- and name like '%'||#{name}||'%' -->
+        and name like concat(concat('%',#{user.name}),'%')
+      </if>
+      <if test="user.addr != null and user.addr!=''" >
+        <!-- and addr like '%'||#{addr}||'%' -->
+        and addr like concat(concat('%',#{user.addr}),'%')
+      </if>
+      order by uid desc
+  </sql>
+  
+  <!-- 查询总记录 -->
+  <select id="selectCount" resultType="java.lang.Integer">
+  	SELECT COUNT(*) FROM (<include refid="select_sql" />)a
+  
+  </select>
+  
+  <!-- 分页查询 -->
+  <select id="selectByPager" resultMap="BaseResultMap" parameterType="com.yyx.entity.User">
+  	<include refid="select_sql" /> LIMIT #{pager.begin},#{pager.pageCount}
+  
+  </select>
+  
+  
+  <select id="select" resultMap="BaseResultMap" parameterType="com.yyx.entity.User">
+    select 
+    <include refid="Base_Column_List" />
+    from user where 1=1
+    
+      <if test="username != null and username!=''" >
+        <!-- and username like '%'||#{username}||'%' 这是Oracle数据库的 -->
+        <!-- mysql数据库中的模糊查询语句 -->
+        and username like concat(concat('%',#{username}),'%')
+      </if>
+      <if test="name != null and name!=''" >
+        <!-- and name like '%'||#{name}||'%' -->
+        and name like concat(concat('%',#{name}),'%')
+      </if>
+      <if test="addr != null and addr!=''" >
+        <!-- and addr like '%'||#{addr}||'%' -->
+        and addr like concat(concat('%',#{addr}),'%')
+      </if>
+      order by uid desc
+    
+  </select>
+  
+  
+  <select id="selAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+  </select>
+  
+  <!-- 批量删除 -->
+  <delete id="deleteBatch">
+    delete from user
+    where uid in 
+    
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+    	<foreach collection="array" item="id">
+    		#{id},
+    	</foreach>
+    </trim>
+    
+  </delete>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where uid = #{uid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where uid = #{uid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.yyx.entity.User" >
+    insert into user (uid, username, password, 
+      name, phone, email, 
+      addr, state, code)
+    values (#{uid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{addr,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{code,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.yyx.entity.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        uid,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="addr != null" >
+        addr,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="uid != null" >
+        #{uid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yyx.entity.User" >
+    update user
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="addr != null" >
+        addr = #{addr,jdbcType=VARCHAR},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yyx.entity.User" >
+    update user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      addr = #{addr,jdbcType=VARCHAR},
+      state = #{state,jdbcType=INTEGER},
+      code = #{code,jdbcType=VARCHAR}
+    where uid = #{uid,jdbcType=INTEGER}
+  </update>
+</mapper>
